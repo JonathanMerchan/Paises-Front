@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+        integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="intrascripts.js"></script>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="./style.css"> -->
+
+    <title>Intranet</title>
+</head>
+<style>
+    .container {
+        text-align: center;
+    }
+
+    .fondo {
+        background-color: #dbd4f3;
+        text-align: center;
+    }
+
+    .fondo2 {
+        background-color: #270570;
+        border-radius: 10px;
+        margin: 0PX auto;
+        margin-left: 10%;
+        margin-right: 10%;
+        text-align: center;
+    }
+
+    .btnColor {
+        background-color: #af3ffa;
+    }
+
+    .TColor {
+        color: aliceblue;
+    }
+</style>
+
+<body>
+
+
+    <div class="modal" tabindex="-1" role="dialog" id="log">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Inicio de Sesion</h5>
+                    <button type="button" id="btnLogModalClose" class="close" data-dismiss="modal" aria-label="Close">
+                        X
+                        <!-- <span aria-hidden="true">&times;</span> -->
+                    </button>
+                </div>
+                <div class="form modal-body">
+                    <div class="col">
+                        <div class="card px-5 py-5" id="form1">
+                            <div class="form-data" v-if="!submitted" style="align-self: center;">
+                                <div class="forms-inputs mb-4">
+                                    <input id="LogEmail" placeholder="Email" autocomplete="off" type="text"
+                                        v-model="email"
+                                        v-bind:class="{'form-control':true, 'is-invalid' : !validEmail(email) && emailBlured}"
+                                        v-on:blur="emailBlured = true">
+                                    <div class="invalid-feedback">A valid email is required!</div>
+                                </div>
+                                <div class="forms-inputs mb-4">
+                                    <input id="LogPass" placeholder="Password" autocomplete="off" type="password"
+                                        v-model="password"
+                                        v-bind:class="{'form-control':true, 'is-invalid' : !validPassword(password) && passwordBlured}"
+                                        v-on:blur="passwordBlured = true">
+                                    <div class="invalid-feedback">Password must be 8 character!</div>
+                                </div>
+                                <div class="mb-3"> <button id="btnGotoLogin" v-on:click.stop.prevent="submit"
+                                        class="btn btn-dark w-100">Login</button> </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" tabindex="-1" role="dialog" id="Register">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Registro</h5>
+                    <button type="button" id="btnRegModalClose" class="close" data-dismiss="modal" aria-label="Close">
+                        X
+                        <!-- <span aria-hidden="true">&times;</span> -->
+                    </button>
+                </div>
+                <div class="form modal-body">
+                    <div class="col">
+                        <div class="card px-5 py-5" id="form2">
+                            <div class="form-data" v-if="!submitted" style="align-self: center;">
+                                <div class="forms-inputs mb-4">
+                                    <input id="Name" placeholder="Nombres y Apellidos" type="text">
+                                </div>
+
+                                <div class="forms-inputs mb-4">
+                                    <input id="Email" placeholder="Correo Electronico" autocomplete="off" type="text"
+                                        v-model="email"
+                                        v-bind:class="{'form-control':true, 'is-invalid' : !validEmail(email) && emailBlured}"
+                                        v-on:blur="emailBlured = true">
+                                    <div class="invalid-feedback">Un Email valido es requerido!</div>
+                                </div>
+                                <div class="forms-inputs mb-4">
+                                    <input id="Pass" placeholder="Constraseña" autocomplete="off" type="password"
+                                        v-model="password"
+                                        v-bind:class="{'form-control':true, 'is-invalid' : !validPassword(password) && passwordBlured}"
+                                        v-on:blur="passwordBlured = true">
+                                    <div class="invalid-feedback">La contraseña debe contener 8 digitos!</div>
+                                </div>
+                                <div class="forms-inputs mb-4">
+                                    <input id="cPass" placeholder="Repita su Constraseña" autocomplete="off"
+                                        type="password" v-model="password"
+                                        v-bind:class="{'form-control':true, 'is-invalid' : !validPassword(password) && passwordBlured}"
+                                        v-on:blur="passwordBlured = true">
+                                    <div class="invalid-feedback">La contraseña debe contener 8 digitos!</div>
+                                </div>
+
+                                <div class="mb-3"> <button id="btnGoToRegister" v-on:click.stop.prevent="submit"
+                                        class="btn btn-dark w-100">Registrar</button> </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container">
+        <header
+            class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+            <a href="/" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
+                <img src="img/logodemo.jpg" width="200" height="100" />
+                <!-- <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"/></svg> -->
+            </a>
+
+            <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+                <li><a href="#" class="nav-link px-2 link-secondary">Inicio</a></li>
+                <li><a href="#" class="nav-link px-2 link-dark">Recomendados</a></li>
+                <li><a href="#" class="nav-link px-2 link-dark">Precios</a></li>
+                <li><a href="#" class="nav-link px-2 link-dark">FAQ</a></li>
+                <li><a href="#" class="nav-link px-2 link-dark">Sobre Nosotros</a></li>
+            </ul>
+
+            <div class="col-md-3 text-end">
+                <button type="button" id="btnLogin" class="btn btn-outline-primary me-2">Iniciar Sesión</button>
+                <button type="button" id="btnRegister" class="btn btn-primary">Registrese</button>
+            </div>
+        </header>
+    </div>
+<!-- Resgistrar pais -->
+    <div class="container">
+        <div class="fondo" style="margin: 10px;">
+            <div class="fondo2 p-3">
+                <div class="col">
+                    <h4 style="text-align: center;" class="TColor p-3">Registrar pais</h4>
+                </div>
+                <div class="container">
+                    <div class="col">
+                        <form id="formCountry">
+                            <input id="paisIn" placeholder="Nuevo Pais" />
+                            <button id="btnAddCountry">Guardar Pais</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Registrar Ciudad / Pueblo -->
+    <div class="container">
+        <div class="fondo" style="margin: 10px;">
+            <div class="fondo2 p-3">
+                <div class="col">
+                    <h4 style="text-align: center;" class="TColor p-3">Registrar Ciudad / Pueblo</h4>
+                </div>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-6">
+                            <label class="TColor">Pais</label>
+                            <select name="" class="custom-select col-5" id="DropCountry">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <form id="formCountry">
+                                <input id="ciudadIn" placeholder="Nueva Ciudad / Pueblo" />
+                                <button id="btnAddCity">Guardar Ciudad</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- Registrar Lugar -->
+    <div class="container">
+        <div class="fondo" style="margin: 10px;">
+            <div class="fondo2 p-3">
+                <div class="col">
+                    <h4 style="text-align: center;" class="TColor p-3">Registrar Lugar</h4>
+                </div>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-6">
+                            <label class="TColor">Pais</label>
+                            <select name="" class="custom-select col-5" id="DropCountry2">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <label class="TColor">Ciudad/Pueblo</label>
+                            <select name="" class="custom-select col-5" id="DropCity2">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin: 10px;">                        
+                        <div class="col-12">
+                            <form id="formPlace">
+                                <input id="placeIn" placeholder="Lugar" ></input>
+                                <button id="btnAddPlace">Guardar</button>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- Registrar Recomendaciones -->
+    <div class="container">
+        <div class="fondo" style="margin: 10px;">
+            <div class="fondo2 p-3">
+                <div class="col">
+                    <h4 style="text-align: center;" class="TColor p-3">Registrar Recomendaciones</h4>
+                </div>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-6">
+                            <label class="TColor">Pais</label>
+                            <select name="" class="custom-select col-5" id="DropCountry3">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <label class="TColor">Ciudad/Pueblo</label>
+                            <select name="" class="custom-select col-5" id="DropCity3">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin: 10px;">
+                        <div class="col-6">
+                            <label class="TColor">Lugar</label>
+                            <select name="" class="custom-select col-5" id="DropPlace">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <label class="TColor">Categoria</label>
+                            <select name="" class="custom-select col-5" id="DropCategory">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin: 10px;">                        
+                        <div class="col-12">
+                            <form id="formCountry">
+                                <textarea id="Comment" placeholder="Recomendacion" ></textarea>
+                                <button id="btnAddComment">Guardar</button>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
